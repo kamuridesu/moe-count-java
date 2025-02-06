@@ -2,6 +2,8 @@ package com.kamuridesu.count.domain.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,17 @@ public class SVGMergerService {
                 """;
     private static final int X_COORD_INCREMENT = 45;
 
-    private static String loadSVG(String filename) throws IOException {
+    private Map<String, String> cachedSvg = new HashMap<>();
+
+    private String loadSVG(String filename) throws IOException {
+        if (this.cachedSvg.containsKey(filename)) {
+            return this.cachedSvg.get(filename);
+        }
         var resource = new ClassPathResource("static/" + filename);
         var path = resource.getFile().toPath();
-        return Files.readString(path);
+        var data = Files.readString(path);
+        this.cachedSvg.put(filename, data);
+        return data;
     }
 
     public String merge(int number) throws IOException {
