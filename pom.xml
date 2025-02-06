@@ -89,7 +89,46 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+			<plugin>
+			<groupId>io.fabric8</groupId>
+			<artifactId>docker-maven-plugin</artifactId>
+			<version>0.45.1</version>
+
+			<executions>
+				<execution>
+					<id>default</id>
+					<phase>deploy</phase>
+					<goals>
+						<goal>build</goal>
+						<goal>push</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+				<images>
+					<image>
+						<name>kamuri/${image.name}:${image.tag}</name>
+						<build>
+							<contextDir>${project.basedir}</contextDir>
+							<dockerFile>Dockerfile</dockerFile>
+						</build>
+					</image>
+				</images>
+			</configuration>
+			</plugin>
+
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>
